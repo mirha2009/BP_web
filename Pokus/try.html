@@ -15,7 +15,7 @@
     
     <body>
         <!-- vloženi containaru s navigační lištou -->
-        <div class="navbar navbar-inverse navbar-static-top">
+        <nav class="navbar navbar-inverse navbar-static-top">
             <div class = "container-fluid">
                 <!-- Tlačítko, které schová menu př nedostatku místa -->
                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -25,29 +25,43 @@
                 </button>
                 <a  href="#" class="navbar-brand">Vizualizace</a>  
                 <div class=" collapse navbar-collapse" id ="myNavbar">
-                    <ul class=" nav navbar-nav navbar-right ">
+                    <ul class=" nav navbar-nav navbar ">
+                        
+                        <li><a href = "#"><span class = "glyphicon glyphicon-home"></span>  </a></li>
                         <li><a href="http://www.superhry.cz/">super</a></li>
-                        <li><a href = "#">Home page1</a></li>
                         <li><a href = "#">Home page2</a></li>
                         <li><a  href = "#">kontakt</a> </li>
                     </ul>                    
                 </div>
             </div>                        
+        </nav>
+        <!-- Page header -->
+        <div class="page-header">
+            <h1>Vizualizace pomocí nástroje Kibana</h1>
         </div>
         
         <!-- Vložení prvního containeru s nadpisem -->
         <div class="container-fluid">
             <h1>Toto je můj první pokus na HTML s použitím BOOTSTRAPU</h1>
-            <p>Lore ipsum</p>
+            <p>Lorem ipsum...</p>
         </div>
+        <!-- Prvek Jubletron, který slouží k upoutání pozornosti -->
+        <div class="container">
+            <div class="jumbotron">
+                <h1>Ahoj já jsem Jubletron</h1>
+                <p>Jsou součástí frameworku Bootstrap</p>
+                
+            </div>
+       
+        
 
         <!-- Spodní lišta na obrazovce -->
-        <div class="navbar navbar-inverse navbar-fixed-bottom">
+        <nav class="navbar navbar-inverse navbar-fixed-bottom">
             <div class="container">
                 <p class="navbar-text pull-left">Site Built By Mira Havlicek</p>
                 <a class="navbar-btn btn-danger btn pull-right" href="https://www.youtube.com/">Subscribe on YouTube</a>
             </div>      
-        </div>  
+        </nav>  
     
     </body>
 

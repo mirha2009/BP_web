@@ -48,18 +48,25 @@
             </div>       
         </div>
         <!-- HospitalityDemo1 -->
-             
+       
+              
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-md-6">
             <iframe src="http://95.173.201.11/#/visualize/edit/Average-total-score-by-languages?embed&_g=()&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'5',params:(field:SCORE_TOTAL),schema:metric,type:avg),(id:'3',params:(field:LANG_NAME,order:desc,orderBy:'5',size:10),schema:group,type:terms),(id:'2',params:(customInterval:'2h',extended_bounds:(),field:DATE_CREATED,interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTimeMarker:!f,addTooltip:!t,defaultYExtents:!f,drawLinesBetweenPoints:!t,interpolate:linear,radiusRatio:'13',scale:linear,setYExtents:!f,shareYAxis:!t,showCircles:!t,smoothLines:!f,times:!(),yAxis:()),type:line))" height="600" width="800"></iframe>
             
             </div>
             
-            <div class="col-sm-6">
+            <div class="col-md-6">
             
-            <iframe src="http://95.173.201.11/#/visualize/edit/Average-total-score-by-languages?embed&_g=()&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'5',params:(field:SCORE_TOTAL),schema:metric,type:avg),(id:'3',params:(field:LANG_NAME,order:desc,orderBy:'5',size:10),schema:group,type:terms),(id:'2',params:(customInterval:'2h',extended_bounds:(),field:DATE_CREATED,interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTimeMarker:!f,addTooltip:!t,defaultYExtents:!f,drawLinesBetweenPoints:!t,interpolate:linear,radiusRatio:'13',scale:linear,setYExtents:!f,shareYAxis:!t,showCircles:!t,smoothLines:!f,times:!(),yAxis:()),type:line))" height="600" width="800"></iframe>
+            <iframe src="http://95.173.201.11/#/visualize/edit/web_language?embed&_g=()&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:WEB_SOURCE,order:desc,orderBy:'1',size:5),schema:segment,type:terms),(id:'3',params:(field:LANG_NAME,order:desc,orderBy:'1',size:5),schema:segment,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,isDonut:!f,shareYAxis:!t),type:pie))" height="600" width="800"></iframe>
             </div>
         </div>
+        <div class="row">
+              <iframe src="http://95.173.201.11/#/visualize/edit/web_language?embed&_g=()&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:WEB_SOURCE,order:desc,orderBy:'1',size:5),schema:segment,type:terms),(id:'3',params:(field:LANG_NAME,order:desc,orderBy:'1',size:5),schema:segment,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,isDonut:!f,shareYAxis:!t),type:pie))" height="600" width="800"></iframe>
+            
+              <iframe src="http://95.173.201.11/#/visualize/edit/web_language?embed&_g=()&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:WEB_SOURCE,order:desc,orderBy:'1',size:5),schema:segment,type:terms),(id:'3',params:(field:LANG_NAME,order:desc,orderBy:'1',size:5),schema:segment,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,isDonut:!f,shareYAxis:!t),type:pie))" height="600" width="800"></iframe>
+        </div>
+        
 
         <!-- Spodní lišta na obrazovce -->
         <nav class="navbar navbar-inverse navbar-bottom">

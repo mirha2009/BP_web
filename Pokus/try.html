@@ -40,23 +40,29 @@
             <h1>Vizualizace pomocí nástroje Kibana</h1>
         </div>
         
-        <!-- Vložení prvního containeru s nadpisem -->
-        <div class="container-fluid">
-            <h1>Toto je můj první pokus na HTML s použitím BOOTSTRAPU</h1>
-            <p>Lorem ipsum...</p>
-        </div>
         <!-- Prvek Jubletron, který slouží k upoutání pozornosti -->
         <div class="container">
             <div class="jumbotron">
-                <h1>Ahoj já jsem Jubletron</h1>
-                <p>Jsou součástí frameworku Bootstrap</p>
+                <h1>Vítám vás na této stránce</h1>
                 
+            </div>       
+        </div>
+        <!-- HospitalityDemo1 -->
+             
+        <div class="row">
+            <div class="col-sm-6">
+            <iframe src="http://95.173.201.11/#/visualize/edit/Average-total-score-by-languages?embed&_g=()&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'5',params:(field:SCORE_TOTAL),schema:metric,type:avg),(id:'3',params:(field:LANG_NAME,order:desc,orderBy:'5',size:10),schema:group,type:terms),(id:'2',params:(customInterval:'2h',extended_bounds:(),field:DATE_CREATED,interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTimeMarker:!f,addTooltip:!t,defaultYExtents:!f,drawLinesBetweenPoints:!t,interpolate:linear,radiusRatio:'13',scale:linear,setYExtents:!f,shareYAxis:!t,showCircles:!t,smoothLines:!f,times:!(),yAxis:()),type:line))" height="600" width="800"></iframe>
+            
             </div>
-       
-        
+            
+            <div class="col-sm-6">
+            
+            <iframe src="http://95.173.201.11/#/visualize/edit/Average-total-score-by-languages?embed&_g=()&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'5',params:(field:SCORE_TOTAL),schema:metric,type:avg),(id:'3',params:(field:LANG_NAME,order:desc,orderBy:'5',size:10),schema:group,type:terms),(id:'2',params:(customInterval:'2h',extended_bounds:(),field:DATE_CREATED,interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTimeMarker:!f,addTooltip:!t,defaultYExtents:!f,drawLinesBetweenPoints:!t,interpolate:linear,radiusRatio:'13',scale:linear,setYExtents:!f,shareYAxis:!t,showCircles:!t,smoothLines:!f,times:!(),yAxis:()),type:line))" height="600" width="800"></iframe>
+            </div>
+        </div>
 
         <!-- Spodní lišta na obrazovce -->
-        <nav class="navbar navbar-inverse navbar-fixed-bottom">
+        <nav class="navbar navbar-inverse navbar-bottom">
             <div class="container">
                 <p class="navbar-text pull-left">Site Built By Mira Havlicek</p>
                 <a class="navbar-btn btn-danger btn pull-right" href="https://www.youtube.com/">Subscribe on YouTube</a>

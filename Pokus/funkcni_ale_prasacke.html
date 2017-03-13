@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="cs">
+    <head>
+        <title>Pokus s Bootstrapem</title>
+        <meta charset="utf-8">
+        <!-- následující meta sloužíá pro lepší zobrazení na mobilních zařízeníách -->
+        <meta name = "viewport" content="width=device-width, initial-sacle = 1">
+        <!-- Vložení bootstrapu na stránku -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+
+    <!-- Hlavní tělo stránky -->
+
+    <body>
+        <!-- vloženi containaru s navigační lištou -->
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class = "container-fluid">
+                <!-- Tlačítko, které schová menu př nedostatku místa -->
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a  href="#" class="navbar-brand">Vizualizace</a>  
+                <div class=" collapse navbar-collapse" id ="myNavbar">
+                    <ul class=" nav navbar-nav navbar ">
+
+                        <li><a href = "#"><span class = "glyphicon glyphicon-home"></span>  </a></li>
+                        <li><a href="http://www.superhry.cz/">super</a></li>
+                        <li><a href = "#">Home page2</a></li>
+                        <li><a  href = "#">kontakt</a> </li>
+                    </ul>                    
+                </div>
+            </div>                        
+        </nav>
+        <!-- Page header -->
+        <div class="page-header">
+            <h1>Vizualizace pomocí nástroje Kibana</h1>
+        </div>
+
+        <!-- Prvek Jubletron, který slouží k upoutání pozornosti -->
+        <div class="container">
+            <div class="jumbotron">
+                <h1>Text</h1>
+                <b></b>
+
+            </div>  
+        </div>
+        <!-- HospitalityDemo1 -->
+        <!-- elastic changeme -->
+        <div class="container">
+            <form id='nameForm'>
+                <div class="form-group">
+                    <input id='nameField' type='visible' class="form-control" placeholder="Hotel name">
+                    <input id='query1'style="display:none" class="form-control" placeholder="Insert query for first hotel">
+                </div>
+                <div class="form-group">
+                    <input id='nameField2' type='visible' class="form-control" placeholder="Hotel name">
+                    <input id='query2'style="display:none" class="form-control" placeholder="Insert query for second hotel">
+                </div>
+                <div class="form-group">
+                    <input id='query3'style="display:none" class="form-control" placeholder="Insert query">
+                </div>
+                <button id='subButton' class="btn btn-default" type='button'>
+                    <i class="glyphicon glyphicon-search"></i> Search hotel
+                </button>   
+                <button id='subButton2' class="btn btn-default" type='button' style="display:none">
+                    <i class="glyphicon glyphicon-search"></i>New search
+                </button>
+                <button id='options' class="btn btn-default" type='button' data-toggle="collapse" data-target="#advanced_col">
+                    <i class="glyphicon glyphicon-cog"></i>Advanced options
+                </button>
+                <div id="advanced_col" class="collapse">
+                    <label id="usage" style="display:visible"><input id="apply" type="checkbox">Apply queries to the search</label>
+                    <label id="one_query" style="display:visible"><input id="check" type="checkbox"> Use one query for search</label>
+
+                </div>
+            </form>
+            <div>
+                <p id='result'></p>
+                <p id='result2'></p>
+            </div>
+        </div>
+
+
+
+        <script>
+            // the function which handles the input field logic
+            var prvni_cast=new String("http://localhost:5601/app/kibana#/dashboard/Total-score2?embed=true&_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)%2Ctime%3A(from%3Anow-5y%2Cmode%3Aquick%2Cto%3Anow))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'HOTEL_NAME:");    
+            var zaver = new String("')),title:'Total+score',uiState:())");
+            var noSearch = "http://localhost:5601/app/kibana#/dashboard/Total-score?embed=true&_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)%2Ctime%3A(from%3Anow-5y%2Cmode%3Aquick%2Cto%3Anow))"
+            var address = "";
+            var address2= "";
+
+
+            function getUserName() {
+                var nameField = document.getElementById('nameField').value;
+                var nameField2 = document.getElementById("nameField2").value;
+                var query1 = document.getElementById("query1").value;
+                var query2 = document.getElementById("query2").value;
+                var query = document.getElementById("query3").value;
+                var checked = document.getElementById("check").checked;
+                var apply = document.getElementById("apply").checked;
+
+                if((nameField == "" && nameField2 != "") || (nameField != "" && nameField2 == "")){
+                    alert("It is necessary to fill in the names of both hotels!");
+                    return;
+                }
+                else if(nameField == "" && nameField2 == ""){
+                    /*Queries are not used*/
+                    if(apply == false){
+                        address = noSearch;
+                        address2 = noSearch;
+                    }
+                    /*One query for both result is used*/
+                    else if(checked == true){                        
+                        query = replace_all(query);
+                        if(query == ""){
+                            alert("Unalbe to apply empty query!");
+                        }
+                        else{
+                            address = prvni_cast.replace("HOTEL_NAME:","").concat(query,zaver);
+                            address2 = prvni_cast.replace("HOTEL_NAME:","").concat(query,zaver);
+                        }
+
+                    }
+                    /*Apply different queries for each result*/
+                    else{
+                        query1 = replace_all(query1);
+                        query2 = replace_all(query2);
+                        if((query1 == "" || query2 =="") || (query1 == "" && query2 == "")){
+                            alert("Unalbe to apply empty query!");
+                        }
+                        else{
+                            address = prvni_cast.replace("HOTEL_NAME:","").concat(query1,zaver);
+                            address2 = prvni_cast.replace("HOTEL_NAME:","").concat(query2,zaver);
+                        }
+
+                    }
+
+                    /*document.getElementById("result").innerHTML = address;
+                    document.getElementById("result2").innerHTML = address2;*/
+                    changeURL();
+                }
+                else{
+                    nameField = replace_all(nameField);
+                    nameField2 = replace_all(nameField2);
+                    query = replace_all(query);
+                    query1 = replace_all(query1);
+                    query2 = replace_all(query2);
+                    /*alert(query2);
+                    alert(query1);*/
+                    /*Apply global query if it is not empty string*/
+                    if((checked == true) && (apply == true)){
+                        if(query == ""){
+                            address = prvni_cast.concat("%22",nameField,"%22",zaver);
+                            address2 = prvni_cast.concat("%22",nameField2,"%22",zaver);
+                            alert("Unalbe to apply empty query!");
+                        }
+                        else{
+                            address = prvni_cast.concat("%22",nameField,"%22AND",query,zaver);
+                            address2 = prvni_cast.concat("%22",nameField2,"%22AND",query,zaver);
+                        }
+
+                    }
+                    /*Apply queries for each search result, if it is not empty string*/
+                    else if(apply == true){
+                        if((query1 == "" || query2 =="") || (query1 == "" && query2 == "")){
+                            alert("Unalbe to apply emtpy query!")
+                        }
+                        else{
+                            address = prvni_cast.concat("%22",nameField,"%22AND",query1,zaver);
+                            address2 = prvni_cast.concat("%22", nameField2, "%22AND", query2, zaver);
+                        }
+
+                    }
+                    /*Mode when queris are not used*/
+                    else{
+                        address = prvni_cast.concat("%22",nameField,"%22",zaver);
+                        address2 = prvni_cast.concat("%22", nameField2, "%22", zaver);
+                    }
+                    /*
+                    document.getElementById("result").innerHTML = address;
+                    document.getElementById("result2").innerHTML = address2;
+                    */
+                    changeURL();
+                }
+
+
+
+            }
+            function replace_all(query){
+                /*Using /g to replace all chars in string*/
+                var original = [" ", ">", "<", "\"", "="];
+                var replace_chars = ["%20", "%3E", "%3C", "%22", "%3D"];
+                var regex;
+                for(var i = 0; i < original.length; i++){
+                    regex = new RegExp(original[i], "g");
+                    query = query.replace(regex, replace_chars[i]);
+                }
+                return query;
+            }
+            function changeURL(){
+
+                document.getElementById("myFrame1").src = address;
+                document.getElementById("myFrame2").src = address2;
+                document.getElementById("subButton").style.display = "none";
+                document.getElementById("subButton2").style.display = "inline";
+                read_true();
+
+                address="";
+                address2="";
+            }
+            function newsearch(){
+                document.getElementById("subButton").style.display = "inline";
+                document.getElementById("subButton2").style.display = "none";
+                document.getElementById("myFrame1").src = noSearch;
+                document.getElementById("myFrame2").src = noSearch;
+                read_false();
+            }
+            function advanced(){  
+                var checked = document.getElementById("check").checked;
+                if( checked == true){
+                    document.getElementById("check").checked = false;
+                    document.getElementById("query3").style.display = "none";
+                    return;
+                }
+                else if(document.getElementById("query1").style.display == "none"){
+                    document.getElementById("query1").style.display = "inline";
+                    document.getElementById("query2").style.display = "inline";
+                    /*document.getElementById("one_query").style.display = "inline";
+                    document.getElementById("usage").style.display = "inline";*/
+
+                }
+                else{
+                    document.getElementById("query1").style.display = "none";
+                    document.getElementById("query2").style.display = "none";
+                    document.getElementById("query3").style.display = "none";
+                }
+            }
+            function one_query(){
+                var checked = document.getElementById("check").checked; 
+                if( checked == true){
+                    document.getElementById("query1").style.display = "none";
+                    document.getElementById("query2").style.display = "none";
+                    document.getElementById("query3").style.display = "inline";
+                }
+                else{
+                    document.getElementById("query3").style.display = "none";
+                    document.getElementById("query1").style.display = "inline";
+                    document.getElementById("query2").style.display = "inline";
+                }
+            }
+            function read_true(){
+                document.getElementById("nameField").readOnly = true;
+                document.getElementById("nameField2").readOnly = true;
+                document.getElementById("query1").readOnly = true;
+                document.getElementById("query2").readOnly = true;
+                document.getElementById("query3").readOnly = true;
+            }
+            function read_false(){
+                document.getElementById("nameField").readOnly = false;
+                document.getElementById("nameField2").readOnly = false;
+                document.getElementById("query1").readOnly = false;
+                document.getElementById("query2").readOnly = false;
+                document.getElementById("query3").readOnly = false;
+            }
+
+
+            // use an eventlistener for the event
+            var subButton = document.getElementById('subButton');
+            subButton.addEventListener('click',getUserName,false);
+
+            var subButton2 = document.getElementById('subButton2');
+            subButton2.addEventListener('click',newsearch,false);
+
+            var advanced_options = document.getElementById("options");
+            advanced_options.addEventListener("click",advanced,false);
+
+            var checkbox = document.getElementById("check");
+            checkbox.addEventListener("click",one_query,false);
+
+            var field = document.getElementById("nameField");
+
+            field.addEventListener("keyup",function(event) {
+                event.preventDefault();
+                if (event.keyCode == 13) {
+                    document.getElementById("subButton").click();
+                }});
+
+            var field2 = document.getElementById("nameField2");
+
+            field2.addEventListener("keyup",function(event) {
+                event.preventDefault();
+                if (event.keyCode == 13) {
+                    document.getElementById("subButton").click();
+                }});
+
+
+        </script>
+
+
+        <div class="row">
+            <!-- -->
+            <div class="col-md-6">
+                <iframe id="myFrame1" src="http://localhost:5601/app/kibana#/dashboard/Total-score?embed=true&_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)%2Ctime%3A(from%3Anow-5y%2Cmode%3Aquick%2Cto%3Anow))" height="850" width="900"></iframe>
+            </div>
+
+            <div class="col-md-6">
+                <iframe id="myFrame2" src="http://localhost:5601/app/kibana#/dashboard/Total-score?embed=true&_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)%2Ctime%3A(from%3Anow-5y%2Cmode%3Aquick%2Cto%3Anow))" height="850" width="900"></iframe>
+
+
+            </div>  <!-- -->
+            <!--
+<iframe src="http://localhost:5601/app/kibana#/dashboard/Total-score?embed=true&_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)%2Ctime%3A(from%3Anow-5y%2Cmode%3Aquick%2Cto%3Anow))" height="600" width="800"></iframe>
+
+-->
+        </div>
+
+
+
+        <!-- Spodní lišta na obrazovce -->
+        <nav class="navbar navbar-inverse navbar-bottom">
+            <div class="container">
+                <p class="navbar-text pull-left">Site Built By Mira Havlicek</p>
+                <a class="navbar-btn btn-danger btn pull-right" href="https://www.youtube.com/">Subscribe on YouTube</a>
+            </div>      
+        </nav>  
+
+    </body>
+</html>

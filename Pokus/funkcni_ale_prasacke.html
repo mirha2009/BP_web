@@ -140,8 +140,8 @@
 
                     }
 
-                    /*document.getElementById("result").innerHTML = address;
-                    document.getElementById("result2").innerHTML = address2;*/
+                    document.getElementById("result").innerHTML = address;
+                    document.getElementById("result2").innerHTML = address2;
                     changeURL();
                 }
                 else{
@@ -160,8 +160,8 @@
                             alert("Unalbe to apply empty query!");
                         }
                         else{
-                            address = prvni_cast.concat("%22",nameField,"%22AND",query,zaver);
-                            address2 = prvni_cast.concat("%22",nameField2,"%22AND",query,zaver);
+                            address = prvni_cast.concat("%22",nameField,"%22%20AND%20",query,zaver);
+                            address2 = prvni_cast.concat("%22",nameField2,"%22%20AND%20",query,zaver);
                         }
 
                     }
@@ -171,8 +171,8 @@
                             alert("Unalbe to apply emtpy query!")
                         }
                         else{
-                            address = prvni_cast.concat("%22",nameField,"%22AND",query1,zaver);
-                            address2 = prvni_cast.concat("%22", nameField2, "%22AND", query2, zaver);
+                            address = prvni_cast.concat("%22",nameField,"%22%20AND%20",query1,zaver);
+                            address2 = prvni_cast.concat("%22", nameField2, "%22%20AND%20", query2, zaver);
                         }
 
                     }
@@ -181,10 +181,10 @@
                         address = prvni_cast.concat("%22",nameField,"%22",zaver);
                         address2 = prvni_cast.concat("%22", nameField2, "%22", zaver);
                     }
-                    /*
+                    
                     document.getElementById("result").innerHTML = address;
                     document.getElementById("result2").innerHTML = address2;
-                    */
+                    
                     changeURL();
                 }
 

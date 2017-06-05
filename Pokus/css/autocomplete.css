@@ -1,0 +1,10 @@
+.ui-autocomplete { max-height: 120px; overflow-y: scroll; overflow-x: hidden;}
+.embed-responsive-16by9 {
+    padding-bottom: 56.25%;
+    border-style: inset;
+}
+.embed-responsive-4by3 {
+    padding-bottom: 75%;
+    border-style: inset;
+    border-color: black;
+}

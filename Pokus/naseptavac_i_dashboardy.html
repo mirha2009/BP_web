@@ -116,8 +116,6 @@
                     complete: function (response){
                         var output = replace_quotes(response.responseText);
                         hotel_field = output.split(",");
-                        //document.getElementById("result").innerHTML = output + "<br>" + "delka je: " + hotel_field.length;
-                        // document.getElementById("result").innerHTML =hotel_field.length;
                         return hotel_field;
                     },
                     error: function () {
@@ -364,7 +362,7 @@
                 document.getElementById("query2").readOnly = false;
                 document.getElementById("query3").readOnly = false;
                 document.getElementById("sel1").disabled = false;
-                
+
             }
 
 
@@ -422,9 +420,6 @@
 
                 <h2>4:3 Responsive Aspect Ratio</h2>
                 <div class="embed-responsive embed-responsive-4by3">
-                    <!--
-<iframe id="myFrame2" class="embed-responsive-item" frameborder="45" scrolling="no" src="http://localhost:5601/app/kibana#/dashboard/Total-score?embed=true&_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)%2Ctime%3A(from%3Anow-5y%2Cmode%3Aquick%2Cto%3Anow))"></iframe>
--->
                     <iframe id="myFrame2" src="http://localhost:5601/app/kibana#/visualize/edit/Attributes?embed=true&_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)%2Ctime%3A(from%3Anow-5y%2Cmode%3Aquick%2Cto%3Anow))" height="600" width="800"></iframe>
                 </div>
             </div>
@@ -434,9 +429,7 @@
         <nav class="navbar navbar-inverse navbar-bottom">
             <div class="container">
                 <p class="navbar-text pull-left">Site Built By Mira Havlicek</p>
-                <!--<a class="navbar-btn btn-danger btn pull-right" href="https://www.youtube.com/">Subscribe on YouTube</a>-->
             </div>      
-        </nav>  
-
+        </nav> 
     </body>
 </html>

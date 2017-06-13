@@ -71,7 +71,7 @@
                                 <i class="glyphicon glyphicon-cog"></i>Advanced options
                             </button>
                             <div id="advanced_col" class="collapse">
-                                <label id="usage" style="display:visible"><input id="apply" type="checkbox">Apply queries to the search</label>
+                                <label id="usage" style="display:none"><input id="apply" type="checkbox">Apply queries to the search</label>
                                 <label id="one_query" style="display:visible"><input id="check" type="checkbox"> Use one query for search</label>
 
                             </div>
@@ -315,6 +315,13 @@
             /*Funkce pro rozšířené nastavení vyhledávání*/
             function advanced(){  
                 var checked = document.getElementById("check").checked;
+                var apply = document.getElementById("apply");
+                if(apply.checked == false){
+                    apply.checked = true;
+                }
+                else{
+                    apply.checked = false;
+                }
                 if( checked == true){
                     document.getElementById("check").checked = false;
                     document.getElementById("query3").style.display = "none";
@@ -410,7 +417,7 @@
         <div class="row">
             <div class="col-lg-6">
 
-                <h2>4:3 Responsive Aspect Ratio</h2>
+                <h2>Hotel 1</h2>
                 <div class="embed-responsive embed-responsive-4by3">
                     <iframe id="myFrame1" class="embed-responsive-item" scrolling="no" src="http://localhost:5601/app/kibana#/dashboard/Total-score?embed=true&_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)%2Ctime%3A(from%3Anow-5y%2Cmode%3Aquick%2Cto%3Anow))"></iframe>
                 </div>
@@ -418,7 +425,7 @@
             <div class="col-lg-6">
 
 
-                <h2>4:3 Responsive Aspect Ratio</h2>
+                <h2>Hotel 2</h2>
                 <div class="embed-responsive embed-responsive-4by3">
                     <iframe id="myFrame2" src="http://localhost:5601/app/kibana#/visualize/edit/Attributes?embed=true&_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)%2Ctime%3A(from%3Anow-5y%2Cmode%3Aquick%2Cto%3Anow))" height="600" width="800"></iframe>
                 </div>

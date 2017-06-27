@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="cs">
+    <head>
+        <title>Kibana vizualizace</title>
+        <meta charset="utf-8">
+        <!-- Následující meta slouží pro lepší zobrazení na mobilních zařízeních -->
+        <meta name = "viewport" content="width=device-width", initial-scale=1>
+        <!-- Nalinkování hostovaných knihoven CSS, jQuery, Bootsreap a JavaScript -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+        <link rel="stylesheet" type="text/css" href="css/autocomplete.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    </head>
+
+    <!-- Hlavní tělo stránky -->
+
+    <body>
+        <!-- Vložení containar s navigační lištou -->
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class = "container-fluid">
+                <!-- Tlačítko, které schová menu př nedostatku místa -->
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a  href="#" class="navbar-brand">Vizualizace</a>  
+                <div class=" collapse navbar-collapse" id ="myNavbar">                    
+                </div>
+            </div>                        
+        </nav>
+        <!-- Název stránky -->
+
+        <div class="page-header">
+            <h1>Vizualizace pomocí nástroje Kibana</h1>
+        </div>
+        <!-- DIV, který obsahuje vstupní pole pro názvy hotelů, dotazy, výběr dashboardů-->
+        <div class="container">
+            <form id='nameForm'>
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="form-group">
+                            <!-- Vstupní pole pro první hotel: jméno a dotaz -->
+                            <input id='nameField' type='visible' class="form-control" placeholder="Hotel name">
+                            <input id='query1'style="display:none" class="form-control" placeholder="Insert query for first hotel">
+                            <!-- Vstupní pole pro druhý hotel: jméno a dotaz -->                           
+                            <div class="form-group">
+                                <input id='nameField2' type='visible' class="form-control" placeholder="Hotel name">
+                                <input id='query2'style="display:none" class="form-control" placeholder="Insert query for second hotel">
+                            </div>
+                            <!-- Vstupní pole pro společný dotaz -->
+                            <div class="form-group">
+                                <input id='query3'style="display:none" class="form-control" placeholder="Insert query">
+                            </div>
+                            <!-- Potvrzující tlačítka pro nameField a nameField2 -->
+                            <button id='subButton' class="btn btn-default" type='button'>
+                                <i class="glyphicon glyphicon-search"></i> Search hotel
+                            </button>   
+                            <button id='subButton2' class="btn btn-default" type='button' style="display:none">
+                                <i class="glyphicon glyphicon-search"></i>New search
+                            </button>
+                            <!-- Tlačítko pro rozšířené možnosti: použití společnoho dotazu. Ovládá collapse menu -->
+                            <button id='options' class="btn btn-default" type='button' data-toggle="collapse" data-target="#advanced_col">
+                                <i class="glyphicon glyphicon-cog"></i>Advanced options
+                            </button>
+                            <div id="advanced_col" class="collapse">
+                                <label id="usage" style="display:none"><input id="apply" type="checkbox">Apply queries to the search</label>
+                                <label id="one_query" style="display:visible"><input id="check" type="checkbox"> Use one query for search</label>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Druhá část DIV, která obsahuje menu na výběr vizualizace.
+                    Zde je nutné přidat další položky pro nové vizualizace.
+                    -->
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="sel1">Select graph:</label>
+                            <select class="form-control" id="sel1">
+                                <option value="1">Hotel score</option>
+                                <option value="2">Food satisfaction</option>
+                                <option value="3">Service score</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <!-- Skript obstarávající funkci našeptávače -->
+        <script type="text/javascript">
+            var hotel_field = [];
+            /*Ajax funkce obstarávající komunikaci s query.php*/
+            function query_ajax(letters){
+                if(letters == ""){
+                    letters = "villa";
+                }
+                /*Nastavení parametrů komunikace. Funkce vrací pole s názvy hotelů.*/
+                $.ajax({
+                    url:'http://localhost/ddd/query.php?term=' + letters,
+                    complete: function (response){
+                        /*Musí se nahradit všechny uvozovky. K tomu slouží funkce replace_quotes(string)*/
+                        var output = replace_quotes(response.responseText);
+                        hotel_field = output.split(",");
+                        return hotel_field;
+                    },
+                    error: function () {
+                        alert("An error has occurred during communication with the PHP server.");
+                    }
+                });
+                return hotel_field;
+            }
+
+            /* Nasazení našeptávače na první pole (nameField) */
+            function first_autocomplete(letters){
+                var hotel_names = [];
+                hotel_names = query_ajax(letters);
+                $("#nameField").autocomplete({
+                    source: hotel_names
+                });
+            }
+            /*Nasazení našeptávače na druhé pole (nameField2)*/
+            function second_autocomplete(letters){
+                var hotel_names = [];
+                hotel_names = query_ajax(letters);
+                $("#nameField2").autocomplete({
+                    source: hotel_names,
+                });
+            }
+        </script>
+
+        <!-- Hlavní skript, který se stará o komunikaci s Kibanou a úpravu řetězců -->
+        <script type="text/javascript">
+            /*Sem se musí zkopírovat URL adresa vizualizace. Umístění musí odpovídat číslu v prvku #sel1*/
+            var dash_urls = [
+                "/app/kibana#/visualize/edit/Attributes?embed=true&_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)%2Ctime%3A(from%3Anow-5y%2Cmode%3Aquick%2Cto%3Anow))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'HOTEL_NAME:",
+                "/app/kibana#/visualize/edit/Pr%C5%AFm%C4%9Brn%C3%BD-sentiment-j%C3%ADdlo?embed=true&_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)%2Ctime%3A(from%3Anow-5y%2Cmode%3Aquick%2Cto%3Anow))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'HOTEL_NAME:",
+                "/app/kibana#/visualize/edit/Is-servise-adequate-questionmark-?embed=true&_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)%2Ctime%3A(from%3Anow-5y%2Cmode%3Aquick%2Cto%3Anow))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'HOTEL_NAME:"
+            ];
+
+            /*Funkce, která zjistí aktuálně zvolenou vizualizaci v prvku #sel1*/
+            function get_number(){
+                var list = document.getElementById("sel1").value;
+                return list;
+            }
+            /*Funkce, která na základě vybraného prvku upraví URL pro použití v iFrame*/
+            function get_url(number){
+                var result = document.getElementById("result");
+                var url = dash_urls[number-1];
+                return url;
+            }
+
+            /*Tady lze změnit adresa serveru*/
+            var kibana_url = "http://localhost:5601";
+            /*Proměnné pro práci s URL řetězcem*/ 
+            var zaver = new String("')),title:'Total+score',uiState:())");
+            var noSearch = "http://localhost:5601/app/kibana#/visualize/edit/Attributes?embed=true&_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)%2Ctime%3A(from%3Anow-5y%2Cmode%3Aquick%2Cto%3Anow))"
+            var address = "";
+            var address2= "";
+
+            /*Hlavní funkce, která se stará o vstup a interakci s Kibanou*/
+            function getUserName() {
+                /*Proměnné, které představují prvky HTML*/
+                var nameField = document.getElementById('nameField').value;
+                var nameField2 = document.getElementById("nameField2").value;
+                var query1 = document.getElementById("query1").value;
+                var query2 = document.getElementById("query2").value;
+                var query = document.getElementById("query3").value;
+                var checked = document.getElementById("check").checked;
+                var apply = document.getElementById("apply").checked;
+                
+                /*Zisk adresy k dashboardu*/
+                var dashboard_url = get_url(get_number());
+                var zacatek_url = kibana_url.concat(dashboard_url);
+                
+                /*Kontrola, aby byla vyplněna obě pole, nebo žádné*/
+                if((nameField == "" && nameField2 != "") || (nameField != "" && nameField2 == "")){
+                    alert("It is necessary to fill in the names of both hotels!");
+                    return;
+                }
+                
+                /*Větev, kdy nejsou zadané názvy hotelů*/
+                else if(nameField == "" && nameField2 == ""){
+                    /*Kontrola použití dotazů*/
+                    if(apply == false){
+                        address = noSearch;
+                        address2 = noSearch;
+                    }
+                    /*Je použitý jeden dotaz pro celé vyhledávání*/
+                    else if(checked == true){                        
+                        query = replace_all(query);
+                        if(query == ""){
+                            alert("Unalbe to apply empty query!");
+                        }
+                        else{
+                            address = zacatek_url.replace("HOTEL_NAME:","").concat(query,zaver);
+                            address2 = zacatek_url.replace("HOTEL_NAME:","").concat(query,zaver);
+                        }
+
+                    }
+                    /*Pro každé vstupní pole je použitý jiný dotaz*/
+                    else{
+                        query1 = replace_all(query1);
+                        query2 = replace_all(query2);
+                        if((query1 == "" || query2 =="") || (query1 == "" && query2 == "")){
+                            alert("Unalbe to apply empty query!");
+                        }
+                        else{
+                            address = zacatek_url.replace("HOTEL_NAME:","").concat(query1,zaver);
+                            address2 = zacatek_url.replace("HOTEL_NAME:","").concat(query2,zaver);
+                        }
+
+                    }
+                    /*Zavolá se funkce, která zajistí komunikaci s Kibanou*/
+                    changeURL();
+                }
+                /*Větev, kdy jsou zadané oba názvy hotelů*/
+                else{
+                    /*Úprava formátu vstupu*/
+                    nameField = replace_all(nameField);
+                    nameField2 = replace_all(nameField2);
+                    query = replace_all(query);
+                    query1 = replace_all(query1);
+                    query2 = replace_all(query2);
+                    /*Použije se jeden globální dotaz pro obě vyhledávání*/
+                    if((checked == true) && (apply == true)){
+                        if(query == ""){
+                            address = zacatek_url.concat("%22",nameField,"%22",zaver);
+                            address2 = zacatek_url.concat("%22",nameField2,"%22",zaver);
+                            alert("Unalbe to apply empty query!");
+                        }
+                        else{
+                            address = zacatek_url.concat("%22",nameField,"%22%20AND%20",query,zaver);
+                            address2 = zacatek_url.concat("%22",nameField2,"%22%20AND%20",query,zaver);
+                        }
+
+                    }
+                    /*Pro každé vyhledávání je použitý vlastní dotaz*/
+                    else if(apply == true){
+                        if((query1 == "" || query2 =="") || (query1 == "" && query2 == "")){
+                            alert("Unalbe to apply emtpy query!")
+                        }
+                        else{
+                            address = zacatek_url.concat("%22",nameField,"%22%20AND%20",query1,zaver);
+                            address2 = zacatek_url.concat("%22", nameField2, "%22%20AND%20", query2, zaver);
+                        }
+
+                    }
+                    /*Větev, kde se nevyužívají dotazy*/
+                    else{
+                        address = zacatek_url.concat("%22",nameField,"%22",zaver);
+                        address2 = zacatek_url.concat("%22", nameField2, "%22", zaver);
+                    }
+                    /*Zavolá se funkce, která zajistí komunikaci s Kibanou */
+                    changeURL();
+                }
+
+
+
+            }
+            /*Funkce, která přetvoří dotaz ze vstupu do formátu, který vyžaduje komunikace s Kibanou*/
+            function replace_all(query){
+                /*Using /g to replace all chars in string*/
+                var original = [" ", ">", "<", "\"", "=", "&", "'"];
+                var replace_chars = ["%20", "%3E", "%3C", "%22", "%3D", "%26", "!'"];
+                var regex;
+                for(var i = 0; i < original.length; i++){
+                    regex = new RegExp(original[i], "g");
+                    query = query.replace(regex, replace_chars[i]);
+                }
+                return query;
+            }
+            /*Funkce která odstraní všechny uvozovky z řetězce*/
+            function replace_quotes(json){
+                var i = 0;
+                while (i == 0){
+                    json = json.replace('"',"");
+                    if(json.search('"') == -1){
+                        i = 1;
+                    }
+                }
+                return json;
+
+            }
+            /*Změní URL v iframu s Kibanou dle hotelu a dotazu*/
+            function changeURL(){
+
+                document.getElementById("myFrame1").src = address;
+                document.getElementById("myFrame2").src = address2;
+                document.getElementById("subButton").style.display = "none";
+                document.getElementById("subButton2").style.display = "inline";
+                read_true();
+
+                address="";
+                address2="";
+            }
+            /*Připraví stránku na vstup nového hledání. Uzamkne ovládací prvky, nebo je shová*/
+            function newsearch(){
+                document.getElementById("subButton").style.display = "inline";
+                document.getElementById("subButton2").style.display = "none";
+                document.getElementById("myFrame1").src = noSearch;
+                document.getElementById("myFrame2").src = noSearch;
+                read_false();
+            }
+            /*Funkce pro rozšířené nastavení vyhledávání*/
+            function advanced(){  
+                /*Proměnné, které představují prvky HTML*/
+                var checked = document.getElementById("check").checked;
+                var apply = document.getElementById("apply");
+                /*Zaškrtnutí check-boxu, který rozhoduje o aplikaci dotazu do vizualizace*/
+                if(apply.checked == false){
+                    apply.checked = true;
+                }
+                else{
+                    apply.checked = false;
+                }
+                /*Shování check-boxu*/
+                if( checked == true){
+                    document.getElementById("check").checked = false;
+                    document.getElementById("query3").style.display = "none";
+                    return;
+                }
+                else if(document.getElementById("query1").style.display == "none"){
+                    document.getElementById("query1").style.display = "inline";
+                    document.getElementById("query2").style.display = "inline";
+
+                }
+                else{
+                    document.getElementById("query1").style.display = "none";
+                    document.getElementById("query2").style.display = "none";
+                    document.getElementById("query3").style.display = "none";
+                }
+            }
+            /*Funkce která zajistí použití jednoho dotazu pro obě vyhledávací pole*/
+            function one_query(){
+                var checked = document.getElementById("check").checked; 
+                if( checked == true){
+                    document.getElementById("query1").style.display = "none";
+                    document.getElementById("query2").style.display = "none";
+                    document.getElementById("query3").style.display = "inline";
+                }
+                else{
+                    document.getElementById("query3").style.display = "none";
+                    document.getElementById("query1").style.display = "inline";
+                    document.getElementById("query2").style.display = "inline";
+                }
+            }
+            /*Nastavení vstupních prvků na read_only*/
+            function read_true(){
+                document.getElementById("nameField").readOnly = true;
+                document.getElementById("nameField2").readOnly = true;
+                document.getElementById("query1").readOnly = true;
+                document.getElementById("query2").readOnly = true;
+                document.getElementById("query3").readOnly = true;
+                document.getElementById("sel1").disabled = true;
+            }
+            /*Nastavení vstupních polí na read_only = FALSE*/
+            function read_false(){
+                document.getElementById("nameField").readOnly = false;
+                document.getElementById("nameField2").readOnly = false;
+                document.getElementById("query1").readOnly = false;
+                document.getElementById("query2").readOnly = false;
+                document.getElementById("query3").readOnly = false;
+                document.getElementById("sel1").disabled = false;
+
+            }
+
+
+            /*Sekce přiřazení akcí k jednotlivým prvkům na stránce*/
+            var subButton = document.getElementById('subButton');
+            subButton.addEventListener('click',getUserName,false);
+
+            var subButton2 = document.getElementById('subButton2');
+            subButton2.addEventListener('click',newsearch,false);
+
+            var advanced_options = document.getElementById("options");
+            advanced_options.addEventListener("click",advanced,false);
+
+            var checkbox = document.getElementById("check");
+            checkbox.addEventListener("click",one_query,false);
+
+            /*Přiřazení našeptávače a zachycení stisknutí Enter na prvním poli s názvem hotelu*/
+            var field = document.getElementById("nameField");
+
+            field.addEventListener("keyup",function(event) {
+                event.preventDefault();
+                if (event.keyCode == 13) {
+                    document.getElementById("subButton").click();
+                }
+                else{
+                    first_autocomplete(field.value);
+                }
+            });
+            /*Přiřazení našeptávače a zachycení stisknutí Enter na druhém poli s názvem hotelu*/
+            var field2 = document.getElementById("nameField2");
+
+            field2.addEventListener("keyup",function(event) {
+                event.preventDefault();
+                if (event.keyCode == 13) {
+                    document.getElementById("subButton").click();
+                }
+                else{
+                    second_autocomplete(field2.value);
+                }
+            });
+        </script>
+
+        <!-- DIV, který obsahuje oba iframe prvky s Kibanou -->
+
+        <div class="row">
+            <div class="col-lg-6">
+
+                <h2>Hotel 1</h2>
+                <div class="embed-responsive embed-responsive-4by3">
+                    <iframe id="myFrame1" class="embed-responsive-item" scrolling="no" src="http://localhost:5601/app/kibana#/visualize/edit/Attributes?embed=true&_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)%2Ctime%3A(from%3Anow-5y%2Cmode%3Aquick%2Cto%3Anow))"></iframe>
+                </div>
+            </div>
+            <div class="col-lg-6">
+
+
+                <h2>Hotel 2</h2>
+                <div class="embed-responsive embed-responsive-4by3">
+                    <iframe id="myFrame2" src="http://localhost:5601/app/kibana#/visualize/edit/Attributes?embed=true&_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)%2Ctime%3A(from%3Anow-5y%2Cmode%3Aquick%2Cto%3Anow))" height="600" width="800"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Spodní lišta na obrazovce -->
+        <nav class="navbar navbar-inverse navbar-bottom">
+            <div class="container">
+                <p class="navbar-text pull-left">Site Built By Mira Havlicek</p>
+            </div>      
+        </nav> 
+    </body>
+</html>
